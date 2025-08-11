@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import { geminiClient } from "../../../lib/gemini";
 
@@ -7,9 +8,22 @@ interface RequestBody {
   strategy?: string;
 }
 
+// Gemini API response interface
+interface GeminiCompletion {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+}
+
 // Validate request body
-function validateRequestBody(body: any): body is RequestBody {
-  return body && typeof body.text === 'string' && body.text.trim().length > 0;
+function validateRequestBody(body: unknown): body is RequestBody {
+  return (
+    !!body &&
+    typeof (body as RequestBody).text === 'string' &&
+    (body as RequestBody).text.trim().length > 0
+  );
 }
 
 export async function POST(req: Request) {
@@ -58,16 +72,16 @@ STRATEGY: Apply this specific strategy to the transformation: ${strategy.trim()}
     // Make API call with timeout and retry logic
     const completion = await Promise.race([
       geminiClient.chat.completions.create({
-        model: "gemini-1.5-flash", // Upgraded to pro model for better results
+        model: "gemini-1.5-flash",
         messages: [{ role: "user", content: template }],
-        max_tokens: 1500, // Reduced max tokens to encourage conciseness
-        temperature: 0.2, // Even lower temperature for more focused, less verbose results
-      }),
+        max_tokens: 1500,
+        temperature: 0.2,
+      }) as Promise<GeminiCompletion>,
       // 30-second timeout
-      new Promise((_, reject) => 
+      new Promise<never>((_, reject) => 
         setTimeout(() => reject(new Error('Request timeout')), 30000)
       )
-    ]) as any;
+    ]);
 
     // Validate API response
     if (!completion?.choices?.[0]?.message?.content) {
