@@ -4,6 +4,7 @@ import { useState } from "react";
 import PromptInput from "./components/PromptInput";
 import PromptOutput from "./components/PromptOutput";
 import { motion, AnimatePresence } from "framer-motion";
+import { Settings, Target, Timer } from "lucide-react";
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
@@ -150,34 +151,34 @@ export default function HomePage() {
         {/* Stats Section */}
         {!loading && !hasResult && (
           <motion.div 
-            className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1 }}
-          >
-            {[
-              { number: '15K+', label: 'Prompts Processed', icon: '⚙️' },
-              { number: '98%', label: 'Accuracy Rate', icon: '🎯' },
-              { number: '1.5s', label: 'Avg. Response Time', icon: '⏱️' }
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                className="flex flex-col items-center p-5 bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700/50"
-                whileHover={{ 
-                  scale: 1.03, 
-                  backgroundColor: 'rgba(55, 65, 81, 0.9)',
-                  borderColor: 'rgba(45, 212, 191, 0.5)' 
-                }}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 1.2 + index * 0.1 }}
-              >
-                <div className="text-xl mb-2">{stat.icon}</div>
-                <div className="text-xl font-semibold text-teal-400">{stat.number}</div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
+          className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1 }}
+        >
+          {[
+            { number: '15K+', label: 'Prompts Processed', icon: <Settings className="w-6 h-6 text-teal-400" /> },
+            { number: '98%', label: 'Accuracy Rate', icon: <Target className="w-6 h-6 text-teal-400" /> },
+            { number: '1.5s', label: 'Avg. Response Time', icon: <Timer className="w-6 h-6 text-teal-400" /> }
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              className="flex flex-col items-center p-5 bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700/50"
+              whileHover={{ 
+                scale: 1.03, 
+                backgroundColor: 'rgba(55, 65, 81, 0.9)',
+                borderColor: 'rgba(45, 212, 191, 0.5)' 
+              }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 1.2 + index * 0.1 }}
+            >
+              <div className="text-xl mb-2">{stat.icon}</div>
+              <div className="text-xl font-semibold text-teal-400">{stat.number}</div>
+              <div className="text-sm text-gray-400">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
         )}
       </main>
     </div>
